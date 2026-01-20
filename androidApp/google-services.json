@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "900679697282",
+    "project_id": "sspl-661a2",
+    "storage_bucket": "sspl-661a2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900679697282:android:c54d5208aad4e5c05e059b",
+        "android_client_info": {
+          "package_name": "com.sspl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAa45bzvvWIbYVmsPg7PQGEm8aF2UY488"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

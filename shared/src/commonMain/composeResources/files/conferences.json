@@ -1,0 +1,176 @@
+[
+  {
+    "title": "Internaltion Surgical Conference,Surgicon 2025 KEMU",
+    "address": "King Edward Medical University, Nelagumbad, Anarkali, Lahore",
+    "short_message": "Transforming Surgical Practice in Pakistan: Through Education and Trining",
+    "start_at": "14/02/2025",
+    "end_at": "15/02/2025",
+    "schedule": [
+      {
+        "day": "14/02/2025",
+        "sessions": [
+          {
+            "start": "14:02:2025 8:30:00",
+            "end": "14:02:2025 10:30:00",
+            "break_start": "14/02/2025 10:30:00",
+            "break_end": "14/02/2025 11:0:00",
+            "break_message": "Exibition & Tea Break",
+            "title": "Key Note Lectures/ Plenary",
+            "message": "6 Talks (12+3) min)",
+            "speakers": [
+              "Prof. Syed Asghar Naqi"
+            ],
+            "hall": "Hall A"
+          },
+          {
+            "start": "14:02:2025 11:00:00",
+            "end": "14:02:2025 12:30:00",
+            "break_start": "14:02:2025 12:30:00",
+            "break_end": "14:02:2025 1:30:00",
+            "break_message": "Lunch & Prayer Break",
+            "title": "Education & Careers",
+            "message": "6 Talks (12+3) min)",
+            "speakers": [
+              "Prof. Irfan Ahmed"
+            ],
+            "hall": "Hall A"
+          },
+          {
+            "start": "14:02:2025 8:30:00",
+            "end": "14:02:2025 10:30:00",
+            "break_start": "14:02:2025 10:30:00",
+            "break_end": "14:02:2025 11:0:00",
+            "break_message": "Exibition & Tea Break",
+            "title": "HPB & Liver Transplant",
+            "message": "9 Talks (8+2)min",
+            "speakers": [
+              "Dr. Yasir Khan"
+            ],
+            "hall": "Hall B"
+          },
+          {
+            "start": "14:02:2025 11:00:00",
+            "end": "14:02:2025 12:30:00",
+            "break_start": "14:02:2025 12:30:00",
+            "break_end": "14:02:2025 1:30:00",
+            "break_message": "Lunch & Prayer Break",
+            "title": "Vascular Surgery",
+            "message": "9 Talks (8+2)min",
+            "speakers": [
+              "Brig.Dr. Ahsan Manzoor Bhatti"
+            ],
+            "hall": "Hall B"
+          },
+          {
+            "start": "14:02:2025 8:30:00",
+            "end": "14:02:2025 10:30:00",
+            "break_start": "14:02:2025 10:30:00",
+            "break_end": "14:02:2025 11:0:00",
+            "break_message": "Exibition & Tea Break",
+            "title": "Orthopaedics & Trauma Surgery",
+            "message": "9 Talks (8+2)min",
+            "speakers": [
+              "Prof. Faisal Masood"
+            ],
+            "hall": "Hall C"
+          },
+          {
+            "start": "14:02:2025 11:00:00",
+            "end": "14:02:2025 12:30:00",
+            "break_start": "14:02:2025 12:30:00",
+            "break_end": "14:02:2025 1:30:00",
+            "break_message": "Lunch & Prayer Break",
+            "title": "Cardio-thoracic Surgery",
+            "message": "9 Talks (8+2)min",
+            "speakers": [
+              "Prof. Irfan Azmatullah"
+            ],
+            "hall": "Hall C"
+          }
+        ]
+      },
+      {
+        "day": "15:02:2025",
+        "sessions": [
+          {
+            "start": "14:02:2025 8:30:00",
+            "end": "14:02:2025 10:30:00",
+            "break_start": "14:02:2025 10:30:00",
+            "break_end": "14:02:2025 11:0:00",
+            "break_message": "Exibition & Tea Break",
+            "title": "Key Note Lecture: Research & AI in Surgery",
+            "message": "6 Talks (12+3) min)",
+            "speakers": [
+              "Prof. Irfan Ahmed"
+            ],
+            "hall": "Hall A"
+          },
+          {
+            "start": "14:02:2025 11:00:00",
+            "end": "14:02:2025 12:30:00",
+            "break_start": "14:02:2025 12:30:00",
+            "break_end": "14:02:2025 1:30:00",
+            "break_message": "Lunch & Prayer Break",
+            "title": "Hernia & Soft Tissue Tumors",
+            "message": "6 Talks (12+3) min)",
+            "speakers": [
+              "Prof. Imran Khokhar"
+            ],
+            "hall": "Hall A"
+          },
+          {
+            "start": "14:02:2025 8:30:00",
+            "end": "14:02:2025 10:30:00",
+            "break_start": "14:02:2025 10:30:00",
+            "break_end": "14:02:2025 11:0:00",
+            "break_message": "Exibition & Tea Break",
+            "title": "Upper GI & Bariatric Surgery",
+            "message": "9 Talks (8+2)min",
+            "speakers": [
+              "Prof. Sajida Qureshi",
+              "Dr. Tahir bin Yunus"
+            ],
+            "hall": "Hall B"
+          },
+          {
+            "start": "14:02:2025 11:00:00",
+            "end": "14:02:2025 12:30:00",
+            "break_start": "14:02:2025 12:30:00",
+            "break_end": "14:02:2025 1:30:00",
+            "break_message": "Lunch & Prayer Break",
+            "title": "Posters Presentation",
+            "message": "9 Talks (8+2)min",
+            "speakers": [],
+            "hall": "Hall B"
+          },
+          {
+            "start": "14:02:2025 8:30:00",
+            "end": "14:02:2025 10:30:00",
+            "break_start": "14:02:2025 10:30:00",
+            "break_end": "14:02:2025 11:0:00",
+            "break_message": "Exibition & Tea Break",
+            "title": "Neuro Surgery",
+            "message": "9 Talks (8+2)min",
+            "speakers": [
+              "Prof. Abdul Hameed"
+            ],
+            "hall": "Hall C"
+          },
+          {
+            "start": "14:02:2025 11:00:00",
+            "end": "14:02:2025 12:30:00",
+            "break_start": "14:02:2025 12:30:00",
+            "break_end": "14:02:2025 1:30:00",
+            "break_message": "Lunch & Prayer Break",
+            "title": "Breast & Endocrine Surgery",
+            "message": "9 Talks (8+2)min",
+            "speakers": [
+              "Prof. Ahmed Uzair Qureshi"
+            ],
+            "hall": "Hall C"
+          }
+        ]
+      }
+    ]
+  }
+]
