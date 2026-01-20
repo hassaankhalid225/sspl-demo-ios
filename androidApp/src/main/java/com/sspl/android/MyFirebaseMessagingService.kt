@@ -13,6 +13,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.sspl.core.models.SessionNotification
 import com.sspl.core.repositories.NotificationRepository
 import com.sspl.session.UserSession
+import com.sspl.core.push.PushNotificationService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -23,6 +24,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private val notificationRepository: NotificationRepository by inject()
     private val userSession: UserSession by inject()
+    private val pushNotificationService: PushNotificationService by inject()
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -179,6 +181,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Save new token to shared user session
         serviceScope.launch {
             userSession.setDeviceToken(token)
+            pushNotificationService.registerDeviceToken()
         }
 
         // TODO: Send token to server if user is logged in

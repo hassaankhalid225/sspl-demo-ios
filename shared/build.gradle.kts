@@ -42,6 +42,8 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.androidx.security.crypto)
             implementation(libs.accompanist.permissions)
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.messaging)
             //Pusher
             //implementation("com.pusher:pusher-java-client:2.2.6")
 

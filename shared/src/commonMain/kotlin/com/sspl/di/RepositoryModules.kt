@@ -9,6 +9,9 @@ import com.sspl.core.repositories.PostRepositoryImpl
 import com.sspl.core.repositories.PostsRepository
 import com.sspl.core.repositories.ScenarioRepository
 import com.sspl.core.repositories.UserRepository
+import com.sspl.core.repositories.DeviceTokenRepository
+import com.sspl.core.push.DeviceTokenManager
+import com.sspl.core.push.PushNotificationService
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -30,4 +33,9 @@ internal val repositoryModules = module {
     factoryOf(::ScenarioRepository)
     factoryOf(::BannerRepository)
     singleOf(::NotificationRepository) // Singleton for notification state
+
+    // Push Notifications
+    factoryOf(::DeviceTokenRepository)
+    factoryOf(::DeviceTokenManager)
+    singleOf(::PushNotificationService)
 }

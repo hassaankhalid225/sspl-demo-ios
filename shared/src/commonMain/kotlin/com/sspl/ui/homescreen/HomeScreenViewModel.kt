@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+import com.sspl.core.push.PushNotificationService
+
 /**
  * Created by M Imran
  * Senior Software Engineer at
@@ -18,14 +20,19 @@ import kotlinx.coroutines.launch
  * se.muhammadimran@gmail.com
  */
 class HomeScreenViewModel(
-    private val getBannersUseCase: GetBannersUseCase
+    private val getBannersUseCase: GetBannersUseCase,
+    private val pushNotificationService: PushNotificationService
 ) : ViewModel() {
     private val _banners = MutableStateFlow<List<Banner>>(emptyList())
     val banners = _banners.asStateFlow()
 
     init {
         fetchBanners()
+        viewModelScope.launch {
+            pushNotificationService.registerDeviceToken()
+        }
     }
+
 
     fun fetchBanners() {
         viewModelScope.launch {
