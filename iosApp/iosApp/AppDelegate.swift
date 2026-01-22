@@ -79,6 +79,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         // Let Messaging know about the message for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
+        // Store notification in repository
+        storeNotificationInRepository(userInfo: userInfo)
+        
         // Show notification banner even when app is in foreground
         completionHandler([.banner, .sound, .badge])
     }
@@ -117,6 +120,38 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         // Let Messaging know about the message for Analytics
         Messaging.messaging().appDidReceiveMessage(userInfo)
         
+        // Store notification in repository
+        storeNotificationInRepository(userInfo: userInfo)
+        
         completionHandler(.newData)
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Store notification in NotificationRepository via IosNotificationHelper
+    private func storeNotificationInRepository(userInfo: [AnyHashable: Any]) {
+        // Extract notification data
+        guard let joinCode = userInfo["join_code"] as? String else {
+            print("FCM: Cannot store notification - missing join_code")
+            return
+        }
+        
+        let sessionIdString = userInfo["session_id"] as? String ?? "0"
+        let sessionId = Int32(sessionIdString) ?? 0
+        let scenarioTitle = userInfo["scenario_title"] as? String
+        let joinUrl = userInfo["join_url"] as? String
+        let sessionType = userInfo["type"] as? String
+        
+        print("FCM: Storing notification in repository - sessionId=\(sessionId), joinCode=\(joinCode)")
+        
+        // Store in Kotlin repository via helper
+        let helper = IosNotificationHelper()
+        helper.storeNotification(
+            sessionId: sessionId,
+            joinCode: joinCode,
+            scenarioTitle: scenarioTitle,
+            joinUrl: joinUrl,
+            sessionType: sessionType
+        )
     }
 }

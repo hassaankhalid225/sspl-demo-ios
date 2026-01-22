@@ -73,11 +73,21 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val joinCode = data["join_code"]
         val scenarioTitle = data["scenario_title"] ?: "New Quiz Session"
         val joinUrl = data["join_url"]
+        val sessionId = data["session_id"]
 
         Log.d(TAG, "Session invite received: $joinCode - $scenarioTitle")
 
-        // You can add the invite to a local database or show it in-app
-        // For now, the notification will be shown by showNotification()
+        // Store invite notification in repository for in-app display
+        if (joinCode != null) {
+            val sessionNotification = SessionNotification(
+                sessionId = sessionId?.toIntOrNull() ?: 0,
+                joinCode = joinCode,
+                scenarioTitle = scenarioTitle,
+                joinUrl = joinUrl
+            )
+            notificationRepository.addSessionNotification(sessionNotification)
+            Log.d(TAG, "Session invite stored in repository")
+        }
     }
 
     private fun handleSessionStarted(data: Map<String, String>) {
