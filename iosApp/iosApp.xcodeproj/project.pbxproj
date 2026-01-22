@@ -42,6 +42,8 @@
 		B151B6DE2F2027EC001064D2 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = B151B6DD2F2027EC001064D2 /* FirebaseStorageCombine-Community */; };
 		B151B6E02F2027EC001064D2 /* FirebaseVertexAI-Preview in Frameworks */ = {isa = PBXBuildFile; productRef = B151B6DF2F2027EC001064D2 /* FirebaseVertexAI-Preview */; };
 		B15873332F21369E00E5882C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B15873322F21369D00E5882C /* GoogleService-Info.plist */; };
+		B1F338752F22E15B009FA57E /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F338732F22E15B009FA57E /* NotificationManager.swift */; };
+		B1F338762F22E15B009FA57E /* SessionWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F338742F22E15B009FA57E /* SessionWebView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -68,6 +70,8 @@
 		B151B6652F2010F2001064D2 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B151B6E52F204076001064D2 /* iosApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iosApp.entitlements; sourceTree = "<group>"; };
 		B15873322F21369D00E5882C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B1F338732F22E15B009FA57E /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		B1F338742F22E15B009FA57E /* SessionWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionWebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +146,8 @@
 				7555FF82242A565900829871 /* ContentView.swift */,
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
+				B1F338732F22E15B009FA57E /* NotificationManager.swift */,
+				B1F338742F22E15B009FA57E /* SessionWebView.swift */,
 				B15873322F21369D00E5882C /* GoogleService-Info.plist */,
 				B151B6652F2010F2001064D2 /* AppDelegate.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
@@ -285,8 +291,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1F338762F22E15B009FA57E /* SessionWebView.swift in Sources */,
 				B151B6662F2010F2001064D2 /* AppDelegate.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				B1F338752F22E15B009FA57E /* NotificationManager.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

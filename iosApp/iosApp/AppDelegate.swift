@@ -92,7 +92,14 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         let userInfo = response.notification.request.content.userInfo
         print("FCM: Notification tapped: \(userInfo)")
         
-        // TODO: Handle notification tap - navigate to specific screen if needed
+        // Extract join_url from notification data
+        if let joinUrl = userInfo["join_url"] as? String {
+            print("FCM: Opening session with join_url: \(joinUrl)")
+            let joinCode = userInfo["join_code"] as? String
+            NotificationManager.shared.openSession(joinUrl: joinUrl, joinCode: joinCode)
+        } else {
+            print("FCM: No join_url found in notification")
+        }
         
         completionHandler()
     }
