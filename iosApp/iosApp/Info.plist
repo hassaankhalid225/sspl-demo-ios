@@ -30,7 +30,7 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>188.245.244.112</key>
+			<key>192.168.1.10</key>
 			<dict>
 				<key>NSAllowsArbitraryLoads</key>
 				<true/>
@@ -54,6 +54,11 @@
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UILaunchStoryboardName</key>

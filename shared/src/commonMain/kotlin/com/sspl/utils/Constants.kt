@@ -17,4 +17,4 @@ const val EMAIL_GUEST_USER = "guest@gmail.com"
  */
 const val PASSWORD_GUEST_USER = "GuestUser@123"
 const val PHONE_GUEST_USER = "+923334254002"
-const val BASE_URL = "http://192.168.50.59:3001"
+const val BASE_URL = "http://192.168.1.10:3001"
