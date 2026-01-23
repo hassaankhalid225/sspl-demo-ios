@@ -32,7 +32,7 @@ internal val repositoryModules = module {
     factoryOf(::PostRepositoryImpl).bind<PostsRepository>()
     factoryOf(::ScenarioRepository)
     factoryOf(::BannerRepository)
-    singleOf(::NotificationRepository) // Singleton for notification state
+    single { NotificationRepository(get()) } // Singleton for notification state with Storage persistence
 
     // Push Notifications
     factoryOf(::DeviceTokenRepository)

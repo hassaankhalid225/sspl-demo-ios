@@ -25,6 +25,7 @@ data class SessionNotification(
     @SerialName("time_per_question") val timePerQuestion: String? = null
 )
 
+@Serializable
 data class NotificationItem(
     val id: String,
     val title: String,
@@ -35,6 +36,7 @@ data class NotificationItem(
     val sessionNotification: SessionNotification? = null
 )
 
+@Serializable
 enum class NotificationType {
     SESSION_LIVE,
     GENERAL,
