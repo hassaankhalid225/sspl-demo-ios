@@ -9,11 +9,23 @@ class PushNotificationService(
     private val userSession: UserSession
 ) {
     suspend fun registerDeviceToken() {
-        if (userSession.token.isNullOrEmpty()) return
+        if (userSession.token.isNullOrEmpty()) {
+            println("PushNotificationService: User not logged in, skipping token registration.")
+            return
+        }
         
-        val deviceToken = tokenManager.getToken() ?: return
+        val deviceToken = tokenManager.getToken() ?: run {
+            println("PushNotificationService: Device token not found.")
+            return
+        }
         val platform = tokenManager.getPlatform()
         
-        repository.saveDeviceToken(deviceToken, platform)
+        println("PushNotificationService: Registering device token: $deviceToken for platform: $platform")
+        
+        repository.saveDeviceToken(deviceToken, platform).onSuccess {
+            println("PushNotificationService: Device token registered successfully.")
+        }.onFailure {
+            println("PushNotificationService: Failed to register device token: ${it.message}")
+        }
     }
 }
