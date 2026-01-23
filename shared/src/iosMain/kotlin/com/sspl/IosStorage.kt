@@ -44,4 +44,9 @@ class IosStorage : Storage {
             defaults.doubleForKey(key).toLong()
         } ?: default
     }
+
+    override suspend fun remove(key: String): Boolean = withContext(dispatcher) {
+        defaults.removeObjectForKey(key)
+        true
+    }
 }

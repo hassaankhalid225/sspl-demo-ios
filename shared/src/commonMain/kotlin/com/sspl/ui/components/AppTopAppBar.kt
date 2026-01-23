@@ -3,6 +3,7 @@ package com.sspl.ui.components
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.sharp.ArrowBack
@@ -18,10 +19,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.sspl.Screen
 import com.sspl.resources.Res
 import com.sspl.resources.ic_user
@@ -29,6 +32,8 @@ import com.sspl.ui.userdetails.ProfileViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * Created by M Imran
@@ -37,7 +42,7 @@ import org.koin.compose.viewmodel.koinViewModel
  * se.muhammadimran@gmail.com
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalEncodingApi::class)
 @Composable
 fun MyTopAppBar(
     modifier: Modifier = Modifier,
@@ -50,6 +55,7 @@ fun MyTopAppBar(
     addButtonClick: () -> Unit = {}
 ) {
     val user by viewModel.user.collectAsStateWithLifecycle()
+    val profileImageBase64 by viewModel.profileImage.collectAsStateWithLifecycle()
     TopAppBar(
         modifier = modifier
             .clip(
@@ -119,11 +125,20 @@ fun MyTopAppBar(
                 }
             } else {
                 IconButton(onClick = onHamburgClicked) {
-                    Icon(
-                        modifier= Modifier.size(26.dp),
-                        painter = painterResource(Res.drawable.ic_user),
-                        contentDescription = null
-                    )
+                    if (profileImageBase64 != null) {
+                        AsyncImage(
+                            model = Base64.decode(profileImageBase64!!),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(32.dp).clip(CircleShape)
+                        )
+                    } else {
+                        Icon(
+                            modifier = Modifier.size(26.dp),
+                            painter = painterResource(Res.drawable.ic_user),
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }

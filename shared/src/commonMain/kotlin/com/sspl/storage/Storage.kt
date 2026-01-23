@@ -12,4 +12,5 @@ interface Storage {
     suspend fun getString(key: String): String?
     suspend fun putLong(key: String, value: Long): Boolean
     suspend fun getLong(key: String, default: Long = 0): Long
+    suspend fun remove(key: String): Boolean
 }

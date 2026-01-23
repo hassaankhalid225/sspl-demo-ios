@@ -59,14 +59,6 @@ data class ExhibitionListResponse(
 )
 
 @Serializable
-data class PaginationMeta(
-    @SerialName("total_records") val totalRecords: Int,
-    @SerialName("current_page") val currentPage: Int,
-    @SerialName("total_pages") val totalPages: Int,
-    val limit: Int
-)
-
-@Serializable
 data class ExhibitionResponse(
     val message: String
 )

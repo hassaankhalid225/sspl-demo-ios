@@ -16,6 +16,7 @@ data class UserResponse(
 
 @Serializable
 data class User(
+    val id: Long = 0L, // Manually added as per requirement
     @SerialName("first_name")
     val firstName: String? = null,
 

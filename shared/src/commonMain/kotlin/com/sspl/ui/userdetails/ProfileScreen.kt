@@ -2,6 +2,7 @@ package com.sspl.ui.userdetails
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,9 +24,11 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
+import com.preat.peekaboo.image.picker.SelectionMode
+import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import com.sspl.Screen
 import com.sspl.core.ApiStates
 import com.sspl.core.models.User
@@ -48,29 +54,36 @@ import com.sspl.ui.components.AppTextBody
 import com.sspl.ui.components.AppTextLabel
 import com.sspl.ui.components.AppTextTitle
 import com.sspl.ui.components.Error
-import com.sspl.utils.EMAIL_GUEST_USER
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
-/**
- * Created by M Imran
- * Senior Software Engineer at
- * BhimSoft on 02/01/2025.
- * se.muhammadimran@gmail.com
- */
+@OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun ProfileScreen(
     navController: NavController,
     viewModel: ProfileViewModel = koinViewModel(),
     onParentGraph: () -> Unit = {}
 ) {
-    //val user by viewModel.user.collectAsStateWithLifecycle()
     val userDetails by viewModel.userDetails.collectAsStateWithLifecycle()
     val onSignedOut by viewModel.onSignedOut.collectAsStateWithLifecycle()
     val isGuestUser by viewModel.isGuestUser.collectAsStateWithLifecycle()
+    val profileImageBase64 by viewModel.profileImage.collectAsStateWithLifecycle()
+    
+    val scope = rememberCoroutineScope()
+    val launcher = rememberImagePickerLauncher(
+        selectionMode = SelectionMode.Single,
+        scope = scope,
+        onResult = { byteArrays ->
+            byteArrays.firstOrNull()?.let {
+                viewModel.updateProfileImage(it)
+            }
+        }
+    )
 
     LaunchedEffect(Unit) {
         viewModel.getUserDetails()
@@ -82,42 +95,57 @@ fun ProfileScreen(
         }
     }
 
-    if (isGuestUser == null || isGuestUser == true || onSignedOut) {
+    if (isGuestUser == null || onSignedOut) {
         AppProgressBar()
         return
     }
-    ProfileScreenContent(
-        userDetails = userDetails, onSignOut = {
-            viewModel.onSignOut()
-        }, onEditPersonalDetails = {
-            navController.currentBackStackEntry?.savedStateHandle?.set(
-                "isPersonalDetails", true
-            )
-            navController.currentBackStackEntry?.savedStateHandle?.set(
-                "currentUser", Json.encodeToString((userDetails as ApiStates.Success).data)
-            )
-            navController.navigate(Screen.EditProfile.route)
-        }, onEditProfessionalDetails = {
-            navController.currentBackStackEntry?.savedStateHandle?.set(
-                "isPersonalDetails", false
-            )
-            navController.currentBackStackEntry?.savedStateHandle?.set(
 
-                "currentUser", Json.encodeToString((userDetails as ApiStates.Success).data)
+    if (isGuestUser == true) {
+        return
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileScreenContent(
+                userDetails = userDetails,
+                profileImageBase64 = profileImageBase64,
+                onEditPersonalDetails = {
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "isPersonalDetails", true
+                    )
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "currentUser", Json.encodeToString((userDetails as ApiStates.Success).data)
+                    )
+                    navController.navigate(Screen.EditProfile.route)
+                },
+                onEditProfessionalDetails = {
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "isPersonalDetails", false
+                    )
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "currentUser", Json.encodeToString((userDetails as ApiStates.Success).data)
+                    )
+                    navController.navigate(Screen.EditProfile.route)
+                },
+                onChangeProfilePicture = {
+                    launcher.launch()
+                }
             )
-            navController.navigate(Screen.EditProfile.route)
         }
-    )
-
-
+        
+        SignOutButton(onSignOut = { viewModel.onSignOut() })
+        Spacer(modifier = Modifier.height(16.dp))
+    }
 }
 
+@OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun ProfileScreenContent(
-    onSignOut: () -> Unit,
     userDetails: ApiStates<User?>,
+    profileImageBase64: String?,
     onEditPersonalDetails: () -> Unit = {},
-    onEditProfessionalDetails: () -> Unit = {}
+    onEditProfessionalDetails: () -> Unit = {},
+    onChangeProfilePicture: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
@@ -135,9 +163,12 @@ fun ProfileScreenContent(
                 // Do nothing, waiting for data
             }
 
-            is ApiStates.Success -> userDetails.data?.let {data->
-                Spacer(Modifier.weight(0.1f))
-                ProfileImage()
+            is ApiStates.Success -> userDetails.data?.let { data ->
+                Spacer(Modifier.height(20.dp))
+                ProfileImage(
+                    imageBase64 = profileImageBase64,
+                    onChangeProfilePicture = onChangeProfilePicture
+                )
                 Spacer(Modifier.height(20.dp))
 
                 BasicInformationSection(data, onEditPersonalDetails = onEditPersonalDetails)
@@ -145,41 +176,56 @@ fun ProfileScreenContent(
                 PersonalDetailsSection(data, onEditProfessionalDetails = onEditProfessionalDetails)
             }
         }
-        Spacer(Modifier.weight(1f))
-        SignOutButton(onSignOut)
     }
 }
 
+@OptIn(ExperimentalEncodingApi::class)
 @Composable
-private fun ProfileImage(onChangeProfilePicture: () -> Unit = {}) {
+private fun ProfileImage(
+    imageBase64: String? = null,
+    onChangeProfilePicture: () -> Unit = {}
+) {
     Box(
         modifier = Modifier.size(130.dp).aspectRatio(1f)
     ) {
-        Image(
-            painter = painterResource(Res.drawable.ic_user),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize().clip(CircleShape)
-        )
+        if (imageBase64 != null) {
+            val imageBytes = Base64.decode(imageBase64)
+            AsyncImage(
+                model = imageBytes,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize().clip(CircleShape)
+            )
+        } else {
+            Image(
+                painter = painterResource(Res.drawable.ic_user),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize().clip(CircleShape)
+            )
+        }
 
-//        Box(
-//            modifier = Modifier.size(30.dp).align(Alignment.BottomEnd).clip(CircleShape)
-//                .background(MaterialTheme.colorScheme.primary)
-//
-//        ) {
-//            Icon(
-//                imageVector = Icons.Default.Edit,
-//                contentDescription = "Edit profile picture",
-//                tint = Color.White,
-//                modifier = Modifier.fillMaxSize().clickable(onClick = onChangeProfilePicture)
-//                    .padding(8.dp)
-//            )
-//        }
+        Box(
+            modifier = Modifier
+                .size(34.dp)
+                .align(Alignment.BottomEnd)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
+                .clickable(onClick = onChangeProfilePicture),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = "Edit profile picture",
+                tint = Color.White,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
     }
 }
 
 
-@Composable
+ @Composable
 private fun BasicInformationSection(user: User?, onEditPersonalDetails: () -> Unit = {}) {
     Column(modifier = Modifier.fillMaxWidth()) {
         val isGuestUser = user?.account?.isGuestUser() == true
@@ -227,18 +273,12 @@ private fun SectionTitle(title: String, showIcon: Boolean = true, onEdit: () -> 
             text = title, fontSize = 14.sp
         )
         Spacer(Modifier.weight(1f))
-        // Box(
-//            modifier = Modifier.size(30.dp).align(Alignment.BottomEnd).clip(CircleShape)
-//                .background(MaterialTheme.colorScheme.primary)
-//
-//        ) {
         AnimatedVisibility(visible = showIcon, modifier = Modifier.clickable(onClick = onEdit)) {
             Icon(
                 imageVector = Icons.Default.Edit,
-                contentDescription = "Edit profile picture",
+                contentDescription = "Edit details",
                 tint = primary,
                 modifier = Modifier.size(22.dp)
-
             )
         }
     }
@@ -284,4 +324,3 @@ fun InfoCard(
         }
     }
 }
-

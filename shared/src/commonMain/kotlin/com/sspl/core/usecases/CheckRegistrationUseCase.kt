@@ -18,8 +18,15 @@ class CheckRegistrationUseCase(private val conferenceRepository: ConferenceRepos
                 val result = response.body<CheckRegistrationResponse>()
                 emit(ApiStates.Success(result))
             } else {
-                val errorResponse = response.body<ApiError>()
-                emit(ApiStates.Failure(errorResponse))
+                val errorBody = response.body<String>()
+                try {
+                    // Try to parse as JSON
+                    val errorResponse = kotlinx.serialization.json.Json.decodeFromString<ApiError>(errorBody)
+                    emit(ApiStates.Failure(errorResponse))
+                } catch (e: Exception) {
+                    // Fallback for non-JSON errors (HTML, plain text, etc)
+                    emit(ApiStates.Failure(ApiError(message = "Error: ${response.status}", error = errorBody)))
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
