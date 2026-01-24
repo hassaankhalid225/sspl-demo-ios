@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sspl.Screen
@@ -234,6 +235,68 @@ fun ConferenceRegistrationContent(
                 }
             }
         }
+        
+        if (state.registration != null && (state.registration.paymentStatus == "PENDING" || state.registration.paymentStatus == "FAILED")) {
+            var paymentMethod by remember { mutableStateOf("ONLINE") }
+            var transactionId by remember { mutableStateOf("") }
+            var bankName by remember { mutableStateOf("") }
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = Color.LightGray.copy(alpha = 0.5f))
+            
+            AppTextLabel(text = "Payment Method", fontWeight = FontWeight.Bold)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Card(
+                    modifier = Modifier.weight(1f).clickable { paymentMethod = "ONLINE" },
+                    colors = CardDefaults.cardColors(containerColor = if (paymentMethod == "ONLINE") primary.copy(alpha = 0.1f) else columnColor),
+                    border = if (paymentMethod == "ONLINE") androidx.compose.foundation.BorderStroke(2.dp, primary) else null
+                ) {
+                    Text("Online Payment", modifier = Modifier.padding(16.dp), textAlign = TextAlign.Center)
+                }
+                Card(
+                    modifier = Modifier.weight(1f).clickable { paymentMethod = "BANK" },
+                    colors = CardDefaults.cardColors(containerColor = if (paymentMethod == "BANK") primary.copy(alpha = 0.1f) else columnColor),
+                    border = if (paymentMethod == "BANK") androidx.compose.foundation.BorderStroke(2.dp, primary) else null
+                ) {
+                    Text("Bank Transfer", modifier = Modifier.padding(16.dp), textAlign = TextAlign.Center)
+                }
+            }
+
+            if (paymentMethod == "BANK") {
+                Spacer(modifier = Modifier.height(8.dp))
+                AppTextField(
+                    text = transactionId,
+                    onTextChange = { transactionId = it },
+                    placeholder = "Transaction ID"
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                AppTextField(
+                    text = bankName,
+                    onTextChange = { bankName = it },
+                    placeholder = "Bank Name"
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                ButtonWithProgress(
+                    isEnabled = transactionId.isNotBlank() && !state.isLoading,
+                    isLoading = state.isLoading,
+                    buttonText = "SUBMIT TRANSACTION",
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    onClick = { viewModel.updateManualPayment(transactionId, bankName) }
+                )
+            }
+            
+            if (paymentMethod == "ONLINE") {
+                 ButtonWithProgress(
+                    isEnabled = !state.isLoading,
+                    isLoading = state.isLoading,
+                    buttonText = "PAY ONLINE NOW",
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    onClick = { viewModel.initiatePayment() }
+                )
+            }
+        }
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), color = Color.LightGray.copy(alpha = 0.5f))
 
@@ -261,21 +324,27 @@ fun ConferenceRegistrationContent(
              else -> false // Disable if already paid
         }
 
-        ButtonWithProgress(
-            isEnabled = isButtonEnabled,
-            isLoading = state.isLoading,
-            buttonText = buttonText,
-            modifier = Modifier.fillMaxWidth().height(56.dp),
-            onClick = {
-                if (!isRegistered) {
+        if (state.registration == null) {
+            ButtonWithProgress(
+                isEnabled = isButtonEnabled,
+                isLoading = state.isLoading,
+                buttonText = buttonText,
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                onClick = {
                     roles.getOrNull(selectedRoleIndex)?.let { role ->
                         viewModel.register(role.id)
                     }
-                } else if (paymentStatus == "PENDING" || paymentStatus == "FAILED") {
-                    viewModel.initiatePayment()
                 }
-            }
-        )
+            )
+        } else if (state.registration.paymentStatus == "SUCCESS") {
+            ButtonWithProgress(
+                isEnabled = false,
+                isLoading = false,
+                buttonText = "PAID",
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                onClick = { }
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
     }

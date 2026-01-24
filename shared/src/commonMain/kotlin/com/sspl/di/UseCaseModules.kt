@@ -38,6 +38,8 @@ import com.sspl.core.usecases.RegisterUserUseCase
 import com.sspl.core.usecases.InitiatePaymentUseCase
 import com.sspl.core.usecases.GetConferenceRolesUseCase
 import com.sspl.core.usecases.GetUserRegistrationsUseCase
+import com.sspl.core.usecases.UpdateManualPaymentUseCase
+import com.sspl.core.usecases.GetRegistrationDetailsUseCase
 import org.koin.dsl.module
 
 /**
@@ -93,5 +95,7 @@ internal val useCaseModules = module {
     factory { InitiatePaymentUseCase(get()) }
     factory { GetConferenceRolesUseCase(get()) }
     factory { GetUserRegistrationsUseCase(get()) }
+    factory { UpdateManualPaymentUseCase(get()) }
+    factory { GetRegistrationDetailsUseCase(get()) }
 }
 

@@ -15,6 +15,8 @@ import com.sspl.core.usecases.GetConferencesDetailsUseCase
 import com.sspl.core.usecases.RegisterUserUseCase
 import com.sspl.core.usecases.InitiatePaymentUseCase
 import com.sspl.core.usecases.GetConferenceRolesUseCase
+import com.sspl.core.usecases.UpdateManualPaymentUseCase
+import com.sspl.core.models.ManualPaymentRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +29,7 @@ class ConferenceRegistrationViewModel(
     private val registerUserUseCase: RegisterUserUseCase,
     private val initiatePaymentUseCase: InitiatePaymentUseCase,
     private val getConferenceRolesUseCase: GetConferenceRolesUseCase,
+    private val updateManualPaymentUseCase: UpdateManualPaymentUseCase,
     private val userSession: UserSession
 ) : ViewModel() {
 
@@ -163,6 +166,31 @@ class ConferenceRegistrationViewModel(
     }
 
     
+    fun updateManualPayment(transactionId: String, bankName: String?) {
+        val currentState = _uiState.value
+        if (currentState !is RegistrationUiState.Content) return
+        val registration = currentState.registration ?: return
+        
+        viewModelScope.launch {
+            _uiState.value = currentState.copy(isLoading = true)
+            val request = com.sspl.core.models.ManualPaymentRequest(
+                transactionId = transactionId,
+                bankName = bankName
+            )
+            updateManualPaymentUseCase(currentState.details.id, registration.id, request).collectLatest { state ->
+                when(state) {
+                    is ApiStates.Success<com.sspl.core.models.Registration> -> {
+                        _uiState.value = currentState.copy(isLoading = false, registration = state.data, error = null)
+                    }
+                    is ApiStates.Failure -> {
+                        _uiState.value = currentState.copy(isLoading = false, error = state.error.message)
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
     fun onPaymentUrlOpened() {
         val currentState = _uiState.value
         if (currentState is RegistrationUiState.Content) {

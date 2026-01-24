@@ -2,6 +2,7 @@ package com.sspl.ui.conference.workshops
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -111,7 +113,8 @@ private fun WorkshopsList(
             WorkshopItem(
                 item = item,
                 position = i,
-                showDivider = i != conferences.size - 1
+                showDivider = i != conferences.size - 1,
+                navController = navController
             ) {
                 navController.currentBackStackEntry?.savedStateHandle?.set(
                     "data",
@@ -125,7 +128,9 @@ private fun WorkshopsList(
 
 @Composable
 private fun WorkshopItem(
-    item: Conference, position: Int, showDivider: Boolean = true, onClick: () -> Unit
+    item: Conference, position: Int, showDivider: Boolean = true, 
+    navController: NavController,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth().let {
@@ -193,10 +198,31 @@ private fun WorkshopItem(
                     text = item.summary ?: ""
                 )
                 Spacer(modifier = Modifier.size(16.dp))
-                AppTextLabel(
-                    text = "MORE DETAILS",
-                    modifier = Modifier.padding(top = 8.dp).align(alignment = Alignment.End)
-                )
+                Row(
+                    modifier = Modifier.padding(top = 8.dp).align(alignment = Alignment.End),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    AppTextLabel(
+                        text = "REGISTER NOW",
+                        textDecoration = TextDecoration.Underline,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.clickable {
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "data",
+                                Json.encodeToString(item)
+                            )
+                            navController.navigate(route = Screen.ConferenceRegistrationScreen.route)
+                        }
+                    )
+                    AppTextLabel(
+                        text = "MORE DETAILS",
+                        textDecoration = TextDecoration.Underline,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.clickable {
+                            onClick.invoke()
+                        }
+                    )
+                }
             }
             if (showDivider) {
                 Spacer(

@@ -31,41 +31,54 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
 
         Log.d(TAG, "From: ${remoteMessage.from}")
+        Log.d(TAG, "Message data payload: ${remoteMessage.data}")
+        Log.d(TAG, "Message notification: ${remoteMessage.notification?.title} / ${remoteMessage.notification?.body}")
 
-        // Check if message contains data payload
-        // Check for session-related data and show notification even if notification payload is missing
-        remoteMessage.data.isNotEmpty().let {
-            val type = remoteMessage.data["type"]
-            val joinCode = remoteMessage.data["join_code"]
-            val scenarioTitle = remoteMessage.data["scenario_title"] ?: "New Session"
-            Log.d(TAG, "Message data payload: ${remoteMessage.data}")
-
-            when (type) {
-                "session_invite" -> {
-                    handleSessionInvite(remoteMessage.data)
-                    // If no notification payload, show one manually for invites
-                    if (remoteMessage.notification == null) {
-                        showNotification("🎯 New Quiz Session!", scenarioTitle, remoteMessage.data)
-                    }
+        val data = remoteMessage.data
+        val type = data["type"]
+        
+        // Handle Session Notifications (Specific Logic)
+        when (type) {
+            "session_invite" -> {
+                handleSessionInvite(data)
+                // If it's data-only or we want a custom banner
+                if (remoteMessage.notification == null) {
+                    val scenarioTitle = data["scenario_title"] ?: "New Quiz Session"
+                    showNotification("🎯 New Quiz Session!", scenarioTitle, data)
                 }
-                "session_started" -> {
-                    handleSessionStarted(remoteMessage.data)
-                    // If no notification payload, show one manually for starts
-                    if (remoteMessage.notification == null) {
-                        showNotification("🚀 Session Started!", scenarioTitle, remoteMessage.data)
-                    }
+                return // Handled
+            }
+            "session_started" -> {
+                handleSessionStarted(data)
+                if (remoteMessage.notification == null) {
+                    val scenarioTitle = data["scenario_title"] ?: "New Session"
+                    showNotification("🚀 Session Started!", scenarioTitle, data)
                 }
+                return // Handled
             }
         }
 
-        // Show notification for other types if notification payload exists and was not already handled
-        remoteMessage.notification?.let {
-            val type = remoteMessage.data["type"]
-            // If it's a session type, we already handled it above if we wanted to
-            // But if it's NOT a session type, or if we want to use the system body:
-            if (type != "session_invite" && type != "session_started") {
-                showNotification(it.title ?: "Notification", it.body ?: "", remoteMessage.data)
+        // Handle General / Other Notifications
+        val title: String? = remoteMessage.notification?.title ?: data["title"] ?: data["gcm.notification.title"]
+        val body: String? = remoteMessage.notification?.body ?: data["body"] ?: data["message"] ?: data["gcm.notification.body"]
+
+        if (title != null || body != null) {
+            val finalTitle = title ?: "Notification"
+            val finalBody = body ?: ""
+            
+            // Map type for repository
+            val notificationType = when(type) {
+                "announcement" -> com.sspl.core.models.NotificationType.ANNOUNCEMENT
+                else -> com.sspl.core.models.NotificationType.GENERAL
             }
+
+            // Always save to repository
+            notificationRepository.addNotification(finalTitle, finalBody, notificationType)
+
+            // Show banner if not already handled by system
+            // (System handles it if notification payload is present AND app is in background)
+            // If we are here, app is either in foreground OR it's a data-only message
+            showNotification(finalTitle, finalBody, data)
         }
     }
 

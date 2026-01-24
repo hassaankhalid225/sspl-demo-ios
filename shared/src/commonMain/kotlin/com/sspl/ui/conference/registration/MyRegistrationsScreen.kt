@@ -18,11 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.sspl.ui.components.AppTextLabel
 import com.sspl.core.models.Registration
+import androidx.navigation.NavController
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MyRegistrationsScreen(
     conferenceId: Long,
+    navController: NavController,
     viewModel: MyRegistrationsViewModel = koinViewModel()
 ) {
     LaunchedEffect(conferenceId) {

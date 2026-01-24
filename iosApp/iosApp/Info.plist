@@ -83,6 +83,17 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array> 
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>sspl</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>com.sspl.sosapp.payment</string>
+		</dict>
 	</array>
 </dict>
 </plist>
