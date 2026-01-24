@@ -50,4 +50,8 @@ class AndroidStorage(context: Context) : Storage {
     override suspend fun getLong(key: String, default: Long): Long = withContext(dispatcher) {
         sharedPreferences.getLong(key, default)
     }
+
+    override suspend fun remove(key: String): Boolean = withContext(dispatcher) {
+        sharedPreferences.edit().remove(key).commit()
+    }
 }

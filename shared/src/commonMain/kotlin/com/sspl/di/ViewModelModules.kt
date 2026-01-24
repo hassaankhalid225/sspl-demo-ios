@@ -20,6 +20,7 @@ import com.sspl.ui.userdetails.UserDetailViewModel
 import com.sspl.ui.notifications.NotificationsViewModel
 import com.sspl.ui.scenario.ScenarioJoinViewModel
 import com.sspl.ui.conference.registration.ConferenceRegistrationViewModel
+import com.sspl.ui.conference.registration.MyRegistrationsViewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -41,8 +42,8 @@ import org.koin.dsl.module
  */
 
 internal val viewModelModules = module {
-    singleOf(::ProfileViewModel)
-    singleOf(::HomeScreenViewModel)
+    viewModelOf(::ProfileViewModel)
+    viewModelOf(::HomeScreenViewModel)
 
     viewModelOf(::ConferenceViewModel)
     viewModelOf(::ConferenceDetailViewModel)
@@ -62,6 +63,7 @@ internal val viewModelModules = module {
     viewModelOf(::NotificationsViewModel)
     viewModelOf(::ScenarioJoinViewModel)
     viewModelOf(::ConferenceRegistrationViewModel)
+    viewModelOf(::MyRegistrationsViewModel)
 
 
 //    viewModelOf(::PlayerScreenViewModel)

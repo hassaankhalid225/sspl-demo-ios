@@ -27,6 +27,7 @@ class UpdateUserBasicInfoUseCase(
 
         try {
             val body = User(
+                id = 0L,
                 firstName = firstName,
                 lastName = lastName,
                 account = Account(

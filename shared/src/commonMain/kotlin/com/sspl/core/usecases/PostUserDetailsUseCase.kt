@@ -27,11 +27,12 @@ class PostUserDetailsUseCase(
         emit(ApiStates.Loading)
         try {
             val body = User(
+                id = 0L,
                 profile = Profile(
                     country = country,
                     institute = instituteName,
                     title = designation,
-                    pmdcNumber = pmdcNo,
+                    pmdcNumber = pmdcNo, 
                     orgNumber = registrationNo
                 )
             )

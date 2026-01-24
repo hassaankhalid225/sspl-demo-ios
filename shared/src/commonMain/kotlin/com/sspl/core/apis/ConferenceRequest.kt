@@ -49,6 +49,10 @@ sealed class ConferenceRequest {
     ) : ConferenceRequest()
 
     @Serializable
+    @Resource("/conferences/{conferenceId}/roles")
+    data class ByRoles(val conferenceId: Long) : ConferenceRequest()
+
+    @Serializable
     @Resource("/conferences/{conferenceId}/registrations/check")
     data class CheckRegistration(val conferenceId: Long) : ConferenceRequest()
 
@@ -57,8 +61,11 @@ sealed class ConferenceRequest {
     data class RegisterUser(val conferenceId: Long) : ConferenceRequest()
 
     @Serializable
-    @Resource("/conferences/{conferenceId}/registrations/{regId}/payment")
-    data class UpdatePayment(val conferenceId: Long, val regId: Long) : ConferenceRequest()
-
-
+    @Resource("/conferences/{conferenceId}/registrations")
+    data class Registrations(
+        val conferenceId: Long,
+        val page: Int? = 1,
+        val limit: Int? = 20,
+        val payment_status: String? = null
+    ) : ConferenceRequest()
 }

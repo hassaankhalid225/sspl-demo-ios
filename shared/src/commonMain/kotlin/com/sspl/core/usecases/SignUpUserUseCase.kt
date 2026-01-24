@@ -27,6 +27,7 @@ class SignUpUserUseCase(
         emit(ApiStates.Loading)
         try {
             val user = User(
+                id = 0L,
                 firstName = firstName.trim(),
                 lastName = lastName.trim(),
                 account = Account(
