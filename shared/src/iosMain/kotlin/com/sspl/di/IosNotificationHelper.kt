@@ -23,7 +23,7 @@ class IosNotificationHelper : KoinComponent {
         joinUrl: String?,
         sessionType: String?
     ) {
-        println("IosNotificationHelper: Storing notification - sessionId=$sessionId, joinCode=$joinCode")
+        println("IosNotificationHelper: Storing session notification - sessionId=$sessionId, joinCode=$joinCode")
         
         val sessionNotification = SessionNotification(
             sessionId = sessionId,
@@ -33,6 +33,15 @@ class IosNotificationHelper : KoinComponent {
         )
         
         notificationRepository.addSessionNotification(sessionNotification)
-        println("IosNotificationHelper: Notification stored successfully")
+        println("IosNotificationHelper: Session notification stored successfully")
+    }
+
+    /**
+     * Store a generic notification in the repository
+     */
+    fun storeGenericNotification(title: String, message: String) {
+        println("IosNotificationHelper: Storing generic notification - title=$title")
+        notificationRepository.addNotification(title, message)
+        println("IosNotificationHelper: Generic notification stored successfully")
     }
 }

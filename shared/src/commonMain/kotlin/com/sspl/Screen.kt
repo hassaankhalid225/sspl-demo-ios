@@ -37,6 +37,7 @@ import com.sspl.ui.conference.programs.ScientificProgramsScreen
 import com.sspl.ui.conference.programs.SessionDetailScreen
 import com.sspl.ui.conference.registration.ConferenceRegistrationScreen
 import com.sspl.ui.conference.registration.PaymentStatusScreen
+import com.sspl.ui.conference.registration.MyRegistrationsScreen
 import com.sspl.ui.conference.workshops.WorkshopDetailScreen
 import com.sspl.ui.conference.workshops.WorkshopsScreen
 import com.sspl.ui.feedback.FeedbackScreen
@@ -207,6 +208,10 @@ sealed class Screen(
     data object PaymentStatusScreen : Screen(
         route = "PaymentStatusScreen",
     )
+
+    data object MyRegistrationsScreen : Screen(
+        route = "MyRegistrationsScreen",
+    )
 }
 
 fun screenByRoute(route: String?): Screen? =
@@ -270,6 +275,12 @@ fun otherScreens(): List<NavItem> = listOf(
     NavItem(
         screen = Screen.PaymentStatusScreen,
         component = { PaymentStatusScreen(navController = it) }),
+    NavItem(
+        screen = Screen.MyRegistrationsScreen,
+        component = { 
+             val confId = it.previousBackStackEntry?.savedStateHandle?.get<Long>("conferenceId") ?: 0L
+             MyRegistrationsScreen(conferenceId = confId, navController = it) 
+        }),
 )
 
 fun kycScreens(): List<NavItem> = listOf(

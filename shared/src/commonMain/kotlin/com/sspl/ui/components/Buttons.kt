@@ -26,10 +26,10 @@ fun AppRoundedCornerButton(modifier: Modifier = Modifier,title:String,isEnabled:
         shape = RoundedCornerShape(16), colors = ButtonDefaults.buttonColors(
             disabledContainerColor = Color.LightGray.copy(0.7f),
         ),
-        modifier = modifier.fillMaxWidth().padding(horizontal = 10.dp,vertical = 6.dp)
+        modifier = modifier.fillMaxWidth().padding(horizontal = 10.dp)
     ) {
         AppTextLabel(
-            title, color = if(isEnabled) Color.White else Color.DarkGray, modifier = Modifier.padding(vertical = 6.dp)
+            title, color = if(isEnabled) Color.White else Color.DarkGray
         )
     }
 }
@@ -41,7 +41,7 @@ fun AppRoundedCornerButton(modifier: Modifier = Modifier,onClick:()->Unit,isEnab
             disabledContainerColor = Color.LightGray.copy(0.7f),
         ),
         shape = RoundedCornerShape(16),
-        modifier = modifier.fillMaxWidth().padding(horizontal =10.dp,vertical = 6.dp)
+        modifier = modifier.fillMaxWidth().padding(horizontal = 10.dp)
     ) {
         content()
     }
@@ -61,22 +61,23 @@ fun ButtonWithProgress(
         modifier = modifier
     ) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.Center
         ) {
             AppTextLabel(
                 text = buttonText,
-                color = if (isEnabled) Color.White else Color.DarkGray,
-                modifier = Modifier.padding(vertical = 6.dp)
+                color = if (isEnabled) Color.White else Color.DarkGray
             )
 
             // Use AnimatedVisibility for the CircularProgressIndicator
             AnimatedVisibility(visible = isLoading) {
                 Row {
-                    Spacer(Modifier.weight(1f)) // Add spacer to push the progress indicator to the right
+                    Spacer(Modifier.size(8.dp))
                     CircularProgressIndicator(
                         color = Color.White,
-                        modifier = Modifier.size(15.dp)
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp
                     )
                 }
             }

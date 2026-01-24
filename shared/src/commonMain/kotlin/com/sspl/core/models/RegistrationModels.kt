@@ -81,3 +81,10 @@ data class InitiatePaymentResponse(
     val bestPaymentUrl: String?
         get() = paymentUrlSnake ?: paymentUrl
 }
+@Serializable
+data class ManualPaymentRequest(
+    @SerialName("payment_status") val paymentStatus: String = "SUCCESS", // Or PENDING verification
+    @SerialName("payment_mode") val paymentMode: String = "BANK",
+    @SerialName("transaction_id") val transactionId: String,
+    @SerialName("bank_name") val bankName: String? = null
+)

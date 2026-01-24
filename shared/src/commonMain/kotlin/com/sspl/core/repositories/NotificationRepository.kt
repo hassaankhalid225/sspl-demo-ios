@@ -86,6 +86,29 @@ class NotificationRepository(private val storage: Storage) {
         }
     }
     
+    fun addNotification(title: String, message: String, type: NotificationType = NotificationType.GENERAL) {
+        val notification = NotificationItem(
+            id = "gen_${DateTimeUtils.timeInMilliNow()}",
+            title = title,
+            message = message,
+            timestamp = DateTimeUtils.timeInMilliNow(),
+            isRead = false,
+            type = type,
+            sessionNotification = null
+        )
+        
+        _notifications.update { currentList ->
+            listOf(notification) + currentList
+        }
+        
+        updateUnreadCount()
+        
+        // Persist after adding
+        scope.launch {
+            saveNotifications()
+        }
+    }
+    
     fun markAsRead(notificationId: String) {
         _notifications.update { currentList ->
             currentList.map { notification ->

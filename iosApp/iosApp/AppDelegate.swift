@@ -130,28 +130,53 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     
     /// Store notification in NotificationRepository via IosNotificationHelper
     private func storeNotificationInRepository(userInfo: [AnyHashable: Any]) {
-        // Extract notification data
-        guard let joinCode = userInfo["join_code"] as? String else {
-            print("FCM: Cannot store notification - missing join_code")
-            return
-        }
-        
-        let sessionIdString = userInfo["session_id"] as? String ?? "0"
-        let sessionId = Int32(sessionIdString) ?? 0
-        let scenarioTitle = userInfo["scenario_title"] as? String
-        let joinUrl = userInfo["join_url"] as? String
-        let sessionType = userInfo["type"] as? String
-        
-        print("FCM: Storing notification in repository - sessionId=\(sessionId), joinCode=\(joinCode)")
-        
-        // Store in Kotlin repository via helper
         let helper = IosNotificationHelper()
-        helper.storeNotification(
-            sessionId: sessionId,
-            joinCode: joinCode,
-            scenarioTitle: scenarioTitle,
-            joinUrl: joinUrl,
-            sessionType: sessionType
-        )
+        
+        // Extract session data if available
+        if let joinCode = userInfo["join_code"] as? String {
+            let sessionIdString = userInfo["session_id"] as? String ?? "0"
+            let sessionId = Int32(sessionIdString) ?? 0
+            let scenarioTitle = userInfo["scenario_title"] as? String
+            let joinUrl = userInfo["join_url"] as? String
+            let sessionType = userInfo["type"] as? String
+            
+            print("FCM: Storing session notification in repository - sessionId=\(sessionId), joinCode=\(joinCode)")
+            
+            // Store in Kotlin repository via helper
+            helper.storeNotification(
+                sessionId: sessionId,
+                joinCode: joinCode,
+                scenarioTitle: scenarioTitle,
+                joinUrl: joinUrl,
+                sessionType: sessionType
+            )
+        } else {
+            // Handle generic notification
+            var title = "Notification"
+            var body = ""
+            
+            // Extract from 'aps' payload
+            if let aps = userInfo["aps"] as? [AnyHashable: Any],
+               let alert = aps["alert"] as? [AnyHashable: Any] {
+                title = alert["title"] as? String ?? "Notification"
+                body = alert["body"] as? String ?? ""
+            } else if let aps = userInfo["aps"] as? [AnyHashable: Any],
+                      let alert = aps["alert"] as? String {
+                body = alert
+            }
+            
+            // If body is empty, try to get from direct keys (some FCM payloads)
+            if body.isEmpty {
+                title = userInfo["title"] as? String ?? userInfo["gcm.notification.title"] as? String ?? "Notification"
+                body = userInfo["body"] as? String ?? userInfo["gcm.notification.body"] as? String ?? ""
+            }
+            
+            if !body.isEmpty {
+                print("FCM: Storing generic notification in repository - title=\(title)")
+                helper.storeGenericNotification(title: title, message: body)
+            } else {
+                print("FCM: Skipping storage - no notification content found")
+            }
+        }
     }
 }

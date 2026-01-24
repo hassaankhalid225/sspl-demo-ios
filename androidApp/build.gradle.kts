@@ -17,7 +17,7 @@ android {
     namespace = "com.sspl.android"
     compileSdk = 35
     defaultConfig {
-        applicationId = "com.sspl"
+        applicationId = "com.sspl.sosapp"
         minSdk = 23
         targetSdk = 35
         versionCode = 7
@@ -64,22 +64,18 @@ android {
     productFlavors {
         create("stage") {
             dimension = "version"
-            applicationIdSuffix = ".android"
             signingConfig = signingConfigs.getByName("stageRelease")
         }
         create("sspl") {
             versionCode = 7
             versionName = "1.0.7"
             dimension = "version"
-            applicationIdSuffix = ".android"
             signingConfig = signingConfigs.getByName("sspl")
         }
         create("bhimsoft") {
             versionCode = 2
             versionName = "1.0.2"
             dimension = "version"
-            // TODO: Add com.sspl.sosapp to Firebase console and update google-services.json
-            // applicationIdSuffix = ".sosapp"
             signingConfig = signingConfigs.getByName("bhimsoft")
         }
     }

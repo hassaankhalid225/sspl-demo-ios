@@ -68,4 +68,12 @@ sealed class ConferenceRequest {
         val limit: Int? = 20,
         val payment_status: String? = null
     ) : ConferenceRequest()
+
+    @Serializable
+    @Resource("/conferences/{conferenceId}/registrations/{id}/payment")
+    data class UpdatePayment(val conferenceId: Long, val id: Long) : ConferenceRequest()
+
+    @Serializable
+    @Resource("/conferences/{conferenceId}/registrations/{id}")
+    data class GetRegistrationById(val conferenceId: Long, val id: Long) : ConferenceRequest()
 }

@@ -7,12 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:900679697282:android:c54d5208aad4e5c05e059b",
+        "mobilesdk_app_id": "1:900679697282:android:f724620db73f09e75e059b",
         "android_client_info": {
-          "package_name": "com.sspl"
+          "package_name": "com.sspl.sosapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "900679697282-tvol0r4v4f2ls2v5ofhr52nhnhcesj5m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDAa45bzvvWIbYVmsPg7PQGEm8aF2UY488"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900679697282-tvol0r4v4f2ls2v5ofhr52nhnhcesj5m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
