@@ -31,54 +31,66 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
 
         Log.d(TAG, "From: ${remoteMessage.from}")
-        Log.d(TAG, "Message data payload: ${remoteMessage.data}")
-        Log.d(TAG, "Message notification: ${remoteMessage.notification?.title} / ${remoteMessage.notification?.body}")
 
-        val data = remoteMessage.data
-        val type = data["type"]
-        
-        // Handle Session Notifications (Specific Logic)
-        when (type) {
-            "session_invite" -> {
-                handleSessionInvite(data)
-                // If it's data-only or we want a custom banner
-                if (remoteMessage.notification == null) {
-                    val scenarioTitle = data["scenario_title"] ?: "New Quiz Session"
-                    showNotification("🎯 New Quiz Session!", scenarioTitle, data)
+        // Check if message contains data payload
+        // Check for session-related data and show notification even if notification payload is missing
+        remoteMessage.data.isNotEmpty().let {
+            val type = remoteMessage.data["type"]
+            val joinCode = remoteMessage.data["join_code"]
+            val scenarioTitle = remoteMessage.data["scenario_title"] ?: "New Session"
+            Log.d(TAG, "Message data payload: ${remoteMessage.data}")
+
+            when (type) {
+                "session_invite" -> {
+                    handleSessionInvite(remoteMessage.data)
+                    // If no notification payload, show one manually for invites
+                    if (remoteMessage.notification == null) {
+                        showNotification("🎯 New Quiz Session!", scenarioTitle, remoteMessage.data)
+                    }
                 }
-                return // Handled
-            }
-            "session_started" -> {
-                handleSessionStarted(data)
-                if (remoteMessage.notification == null) {
-                    val scenarioTitle = data["scenario_title"] ?: "New Session"
-                    showNotification("🚀 Session Started!", scenarioTitle, data)
+                "session_started" -> {
+                    handleSessionStarted(remoteMessage.data)
+                    // If no notification payload, show one manually for starts
+                    if (remoteMessage.notification == null) {
+                        showNotification("🚀 Session Started!", scenarioTitle, remoteMessage.data)
+                    }
                 }
-                return // Handled
+                else -> {
+                    // For any other data-only notification that has a title/body
+                    val title = remoteMessage.data["title"]
+                    val body = remoteMessage.data["body"] ?: remoteMessage.data["message"]
+                    
+                    if (title != null || body != null) {
+                        val finalTitle = title ?: "Notification"
+                        val finalBody = body ?: ""
+                        
+                        val notificationType = when(type) {
+                            "announcement" -> com.sspl.core.models.NotificationType.ANNOUNCEMENT
+                            else -> com.sspl.core.models.NotificationType.GENERAL
+                        }
+                        
+                        notificationRepository.addNotification(finalTitle, finalBody, notificationType)
+                        
+                        if (remoteMessage.notification == null) {
+                            showNotification(finalTitle, finalBody, remoteMessage.data)
+                        }
+                    }
+                }
             }
         }
 
-        // Handle General / Other Notifications
-        val title: String? = remoteMessage.notification?.title ?: data["title"] ?: data["gcm.notification.title"]
-        val body: String? = remoteMessage.notification?.body ?: data["body"] ?: data["message"] ?: data["gcm.notification.body"]
-
-        if (title != null || body != null) {
-            val finalTitle = title ?: "Notification"
-            val finalBody = body ?: ""
-            
-            // Map type for repository
-            val notificationType = when(type) {
-                "announcement" -> com.sspl.core.models.NotificationType.ANNOUNCEMENT
-                else -> com.sspl.core.models.NotificationType.GENERAL
+        // Show notification for other messages with a notification payload
+        // only if they were not already handled as session/known types above
+        remoteMessage.notification?.let {
+            val type = remoteMessage.data["type"]
+            if (type != "session_invite" && type != "session_started" && type != "announcement") {
+                val title = it.title ?: "Notification"
+                val body = it.body ?: ""
+                showNotification(title, body, remoteMessage.data)
+                
+                // Save to repository
+                notificationRepository.addNotification(title, body)
             }
-
-            // Always save to repository
-            notificationRepository.addNotification(finalTitle, finalBody, notificationType)
-
-            // Show banner if not already handled by system
-            // (System handles it if notification payload is present AND app is in background)
-            // If we are here, app is either in foreground OR it's a data-only message
-            showNotification(finalTitle, finalBody, data)
         }
     }
 
