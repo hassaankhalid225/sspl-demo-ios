@@ -10,11 +10,14 @@ import com.sspl.core.repositories.AuthRepository
 import com.sspl.session.UserSession
 import io.ktor.client.call.body
 import io.ktor.http.isSuccess
+import com.sspl.core.push.PushNotificationService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class SignUpUserUseCase(
-    private val authRepository: AuthRepository, private val userSession: UserSession
+    private val authRepository: AuthRepository,
+    private val userSession: UserSession,
+    private val pushNotificationService: PushNotificationService
 ) {
 
     fun signUpUser(
@@ -42,6 +45,9 @@ class SignUpUserUseCase(
                 val result = response.body<UserResponse>()
                 result.accessToken?.let { userSession.setToken(it) }
                 result.user?.let { userSession.setUser(it) }
+                
+                // Register device token after successful signup
+                pushNotificationService.registerDeviceToken()
 
                 println("the result is $result")
                 emit(ApiStates.Success(result))
