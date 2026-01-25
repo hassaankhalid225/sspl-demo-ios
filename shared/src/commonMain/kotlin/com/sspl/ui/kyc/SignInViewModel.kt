@@ -229,9 +229,7 @@ class SignInViewModel(
             }
 
             if (!isHandled) {
-                if (state is ApiStates.Success) {
-                    pushNotificationService.registerDeviceToken()
-                }
+                // Note: registerDeviceToken() is already called in LoginUserUseCase after successful login
                 _networkState.emit(state)
             }
         }
@@ -248,9 +246,7 @@ class SignInViewModel(
                 phoneNumber = PHONE_GUEST_USER
             ).collect { state ->
                 _uiState.update { it.copy(isLoading = state is ApiStates.Loading) }
-                if (state is ApiStates.Success) {
-                    pushNotificationService.registerDeviceToken()
-                }
+                // Note: registerDeviceToken() is already called in SignUpUserUseCase after successful signup
                 _networkState.emit(state)
             }
         }

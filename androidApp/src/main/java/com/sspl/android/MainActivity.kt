@@ -103,6 +103,14 @@ class MainActivity : ComponentActivity() {
             // Save token locally
             userSession.setDeviceToken(token)
             
+            // Only send token to backend if user is logged in
+            if (userSession.token.isNullOrEmpty()) {
+                Log.d("MainActivity", "User not logged in, skipping device token registration to backend")
+                return@launch
+            }
+            
+            Log.d("MainActivity", "User is logged in, sending device token to backend...")
+            
             // Send token to backend
             updateDeviceTokenUseCase(
                 deviceToken = token,

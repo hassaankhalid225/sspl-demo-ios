@@ -73,7 +73,7 @@ internal val useCaseModules = module {
     factory { LikePostUseCase() }
     factory { DislikePostUseCase() }
     factory { CommentOnPostUseCase() }
-    factory { SignUpUserUseCase(get(), get()) }
+    factory { SignUpUserUseCase(get(), get(), get()) }
     factory { LoginUserUseCase(get(), get(), get()) }
     factory { GetConferencesUseCase(get()) }
     factory { GetConferencesDetailsUseCase(get()) }
